@@ -1,4 +1,8 @@
 import json
+import os
+import sys
+
+sys.path.append('../')
 
 from easynmt import EasyNMT
 import pandas as pd
@@ -16,24 +20,27 @@ def main():
 
     model = EasyNMT('opus-mt')
 
-    language_vals = df['product_locale'].unique()
+    language_vals = df['product_locale'].unique().tolist()
+    language_vals.remove('us')
+    print(language_vals)
 
     for col in ['product_title', 'product_description', 'product_bullet_point','product_brand', 'product_color_name']:
         mapping = {}
 
         for lang in language_vals:
-            if lang == 'us':
-                continue
             df[col] = df[col].astype(str)
             unique_vals = df.loc[df['product_locale']==lang, col].unique()
             print(len(unique_vals))
+
+            if lang == 'jp':
+                lang = 'jap'
 
             translations = model.translate(unique_vals, source_lang=lang ,target_lang='en', batch_size=60, show_progress_bar=True, beam_size=3)
 
             for i in range(len(translations)):
                 mapping[unique_vals[i]] = translations[i]
 
-        write_json(f'../drive/MyDrive/amazon-KDD/{col}_mapping.json', mapping)
+        write_json(f'{col}_mapping.json', mapping)
 
 if __name__ == "__main__":
     main()
