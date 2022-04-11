@@ -1,2 +1,5 @@
-dvc
+numpy=1.22.3
+pandas=1.4.2
+dvc=2.10.1
 dvc[gdrive]
+easynmt
