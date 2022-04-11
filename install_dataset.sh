@@ -1,8 +1,8 @@
 #/bin/bash
 
-cd amazon-KDD
+pip install --upgrade pip
 
-!pip install -r requirements.txt
+pip install -r requirements.txt
 
 dvc pull 
 
